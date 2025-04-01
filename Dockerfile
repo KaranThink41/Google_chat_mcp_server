@@ -13,8 +13,9 @@ RUN npm install --ignore-scripts
 # Copy remaining source
 COPY . .
 
-# Build the project
-RUN npx tsc
+# Build the TypeScript project
+RUN npm run build
+
 
 # Set default environment variables (can be overridden at runtime)
 ENV GOOGLE_CLIENT_ID=dummy_client_id
