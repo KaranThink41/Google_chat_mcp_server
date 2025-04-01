@@ -35,21 +35,12 @@ A Model Context Protocol (MCP) server that provides tools for interacting with G
      4. Set "Authorized redirect URIs" to include: `http://localhost:4100/code`
      5. Note down the Client ID and Client Secret
 
-## Setup Instructions
-
-### Installing via Smithery
-
-To install gsuite-mcp for Claude Desktop automatically via [Smithery](https://smithery.ai/server/@rishipradeep-think41/gsuite-mcp):
-
-```bash
-npx -y @smithery/cli install @rishipradeep-think41/gsuite-mcp --client claude
-```
 
 ### Installing Manually
 1. **Clone and Install**:
    ```bash
-   git clone https://github.com/epaproditus/google-workspace-mcp-server.git
-   cd google-workspace-mcp-server
+   git clone https://github.com/KaranThink41/Google_workspace_mcp_server.git
+   cd Google_workspace_mcp_server
    npm install
    ```
 
@@ -60,7 +51,7 @@ npx -y @smithery/cli install @rishipradeep-think41/gsuite-mcp --client claude
        "web": {
            "client_id": "YOUR_CLIENT_ID",
            "client_secret": "YOUR_CLIENT_SECRET",
-           "redirect_uris": ["http://localhost:4100/code"],
+           "redirect_uris": ["http://localhost:3000/auth/callback"],
            "auth_uri": "https://accounts.google.com/o/oauth2/auth",
            "token_uri": "https://oauth2.googleapis.com/token"
        }
@@ -203,3 +194,232 @@ npx -y @smithery/cli install @rishipradeep-think41/gsuite-mcp --client claude
 ## License
 
 This project is licensed under the MIT License.
+
+# Google Chat MCP Server
+
+A Model Context Protocol (MCP) server implementation for interacting with Google Chat API. This server provides tools for managing messages, spaces, and memberships in Google Chat.
+
+## Features
+
+- Post text messages to Google Chat spaces
+- Get space details and list spaces
+- Manage memberships (list, get member details)
+- List and retrieve messages with filtering capabilities
+- Natural language filtering support
+
+## Prerequisites
+
+- Node.js (LTS version)
+- Google Cloud Project with Google Chat API enabled
+- Google OAuth 2.0 credentials
+- Docker (optional, for container deployment)
+
+## Setup Instructions
+
+### 1. Google Cloud Project Setup
+
+1. Go to [Google Cloud Console](https://console.cloud.google.com/)
+2. Create a new project or select an existing one
+3. Enable the Google Chat API
+4. Create OAuth 2.0 credentials:
+   - Go to API & Services > Credentials
+   - Click "Create Credentials" > OAuth client ID
+   - Select "Desktop app" as the application type
+   - Note down the Client ID and Client Secret
+
+### 2. Get Refresh Token
+
+1. Create a temporary credentials file:
+```bash
+cp temp-credentials.json.example temp-credentials.json
+```
+
+2. Update the `temp-credentials.json` with your Client ID and Client Secret
+
+3. Run the refresh token script:
+```bash
+node get-refresh-token.js
+```
+
+4. Follow the browser authentication flow to get the refresh token
+
+### 3. Environment Setup
+
+1. Copy the example environment file:
+```bash
+cp .env.example .env
+```
+
+2. Update the `.env` file with your credentials:
+```env
+GOOGLE_CLIENT_ID=your_client_id
+GOOGLE_CLIENT_SECRET=your_client_secret
+GOOGLE_REFRESH_TOKEN=your_refresh_token
+GOOGLE_REDIRECT_URI=http://localhost:8000/auth/callback
+SPACE_ID=your_space_id
+```
+
+### 4. Local Development
+
+1. Clone the repository:
+```bash
+git clone https://github.com/KaranThink41/Google_chat_mcp_server.git
+cd Google_chat_mcp_server
+```
+
+2. Install dependencies:
+```bash
+npm install
+```
+
+3. Build the project:
+```bash
+npm run build
+```
+
+4. Run the server:
+```bash
+node build/index.js
+```
+
+## Available Tools
+
+### Message Management
+- `post_text_message`: Post a text message to a Google Chat space
+  ```json
+  {
+    "method": "tools/call",
+    "params": {
+      "name": "post_text_message",
+      "arguments": {
+        "spaceId": "AAAAfkdUqxE",
+        "text": "Hello, this is a test message!"
+      }
+    }
+  }
+  ```
+
+- `fetch_message_details`: Get detailed information about a specific message
+  ```json
+  {
+    "method": "tools/call",
+    "params": {
+      "name": "fetch_message_details",
+      "arguments": {
+        "spaceId": "AAAAfkdUqxE",
+        "messageId": "cpwLU-2f_z8.cpwLU-2f_z8"
+      }
+    }
+  }
+  ```
+
+- `list_space_messages`: List messages in a space with optional filtering
+  ```json
+  {
+    "method": "tools/call",
+    "params": {
+      "name": "list_space_messages",
+      "arguments": {
+        "spaceId": "AAAAfkdUqxE",
+        "pageSize": 10,
+        "orderBy": "createTime"
+      }
+    }
+  }
+  ```
+
+### Space Management
+- `fetch_space_details`: Get comprehensive details about a space
+  ```json
+  {
+    "method": "tools/call",
+    "params": {
+      "name": "fetch_space_details",
+      "arguments": {
+        "spaceId": "AAAAfkdUqxE"
+      }
+    }
+  }
+  ```
+
+- `list_joined_spaces`: List all spaces the caller is a member of
+  ```json
+  {
+    "method": "tools/call",
+    "params": {
+      "name": "list_joined_spaces",
+      "arguments": {
+        "pageSize": 10
+      }
+    }
+  }
+  ```
+
+### Membership Management
+- `list_space_memberships`: List all memberships in a space
+  ```json
+  {
+    "method": "tools/call",
+    "params": {
+      "name": "list_space_memberships",
+      "arguments": {
+        "spaceId": "AAAAfkdUqxE",
+        "pageSize": 10
+      }
+    }
+  }
+  ```
+
+- `fetch_member_details`: Get detailed information about a specific member
+  ```json
+  {
+    "method": "tools/call",
+    "params": {
+      "name": "fetch_member_details",
+      "arguments": {
+        "spaceId": "AAAAfkdUqxE",
+        "memberId": "user_123"
+      }
+    }
+  }
+  ```
+
+### Natural Language Filtering
+- `apply_natural_language_filter`: Convert natural language queries into API filter strings
+  ```json
+  {
+    "method": "tools/call",
+    "params": {
+      "name": "apply_natural_language_filter",
+      "arguments": {
+        "filterText": "messages from Monday"
+      }
+    }
+  }
+  ```
+
+## Error Handling
+
+The server implements proper error handling with descriptive error messages. Common errors include:
+- Authentication failures
+- Invalid space IDs
+- Rate limiting
+- API quota exceeded
+
+## Security
+
+- All sensitive credentials are stored in environment variables
+- OAuth refresh tokens are securely managed
+- API keys are never exposed in the code
+
+## Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
