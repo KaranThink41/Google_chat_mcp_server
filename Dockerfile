@@ -4,20 +4,24 @@ FROM node:lts-alpine
 # Set working directory
 WORKDIR /app
 
-# Copy package files and install dependencies
+# Copy package files
 COPY package.json package-lock.json ./
 
-# Install dependencies without running lifecycle scripts, then build
+# Install dependencies
 RUN npm install --ignore-scripts
 
-# Copy the rest of the files
+# Copy remaining source
 COPY . .
 
-# Build the TypeScript project
-RUN npm run build
+# Build the project
+RUN npx tsc
 
-# Expose port if needed (not strictly necessary for local MCP over stdio)
-# EXPOSE 3000
+# Set default environment variables (can be overridden at runtime)
+ENV GOOGLE_CLIENT_ID=dummy_client_id
+ENV GOOGLE_CLIENT_SECRET=dummy_client_secret
+ENV GOOGLE_REFRESH_TOKEN=dummy_refresh_token
+ENV GOOGLE_REDIRECT_URI=dummy_redirect_uri
+ENV SPACE_ID=dummy_space_id
 
-# Run command - The entrypoint of the MCP server
+# Start the MCP server
 CMD ["node", "build/index.js"]

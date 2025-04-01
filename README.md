@@ -32,9 +32,8 @@ A Model Context Protocol (MCP) server that provides tools for interacting with G
      1. Go to "APIs & Services" > "Credentials"
      2. Click "Create Credentials" > "OAuth client ID"
      3. Choose "Web application"
-     4. Set "Authorized redirect URIs" to include: `http://localhost:4100/code`
+     4. Set "Authorized redirect URIs" to include: `http://localhost:3000/auth/callback`
      5. Note down the Client ID and Client Secret
-
 
 ### Installing Manually
 1. **Clone and Install**:
