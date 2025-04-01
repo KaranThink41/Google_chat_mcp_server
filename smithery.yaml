@@ -9,6 +9,7 @@ startCommand:
       - googleClientId
       - googleClientSecret
       - googleRefreshToken
+      - spaceId
     properties:
       googleClientId:
         type: string
@@ -19,6 +20,9 @@ startCommand:
       googleRefreshToken:
         type: string
         description: Refresh token obtained via OAuth
+      spaceId:
+        type: string
+        description: Space ID from Google Chat
   commandFunction:
     # A JS function that produces the CLI command based on the given config to start the MCP on stdio.
     |-
@@ -28,10 +32,12 @@ startCommand:
       env: {
         GOOGLE_CLIENT_ID: config.googleClientId,
         GOOGLE_CLIENT_SECRET: config.googleClientSecret,
-        GOOGLE_REFRESH_TOKEN: config.googleRefreshToken
+        GOOGLE_REFRESH_TOKEN: config.googleRefreshToken,
+        SPACE_ID: config.spaceId
       }
     })
   exampleConfig:
     googleClientId: your_client_id_here
     googleClientSecret: your_client_secret_here
     googleRefreshToken: your_refresh_token_here
+    spaceId: your_space_id_here
