@@ -35,67 +35,53 @@ A Model Context Protocol (MCP) server that provides tools for interacting with G
      4. Set "Authorized redirect URIs" to include: `http://localhost:3000/auth/callback`
      5. Note down the Client ID and Client Secret
 
-### Installing Manually
-1. **Clone and Install**:
-   ```bash
-   git clone https://github.com/KaranThink41/Google_workspace_mcp_server.git
-   cd Google_workspace_mcp_server
-   npm install
-   ```
+### Installing via Smithery
 
-2. **Create OAuth Credentials**:
-   Create a `credentials.json` file in the root directory:
-   ```json
-   {
-       "web": {
-           "client_id": "YOUR_CLIENT_ID",
-           "client_secret": "YOUR_CLIENT_SECRET",
-           "redirect_uris": ["http://localhost:3000/auth/callback"],
-           "auth_uri": "https://accounts.google.com/o/oauth2/auth",
-           "token_uri": "https://oauth2.googleapis.com/token"
-       }
-   }
-   ```
+Install the server using Smithery's CLI:
+```bash
+npx spinai-mcp install @KaranThink41/gsuite-mcp-server --provider smithery --config '{"googleClientId":"your_google_client_id","googleClientSecret":"your_google_client_secret","googleRefreshToken":"your_google_refresh_token"}'
+```
 
-3. **Get Refresh Token**:
-   ```bash
-   node get-refresh-token.js
-   ```
-   This will:
-   - Open your browser for Google OAuth authentication
-   - Request the following permissions:
-     - `https://www.googleapis.com/auth/gmail.modify`
-     - `https://www.googleapis.com/auth/calendar`
-     - `https://www.googleapis.com/auth/gmail.send`
-   - Save the credentials to `token.json`
-   - Display the refresh token in the console
+Alternatively, you can use the following configuration:
+```javascript
+// smithery.config.js
+export default {
+  KaranThink41_google_chat_mcp_server: {
+    command: 'npx',
+    args: [
+      '-y',
+      '@smithery/cli@latest',
+      'run',
+      '@KaranThink41/google_chat_mcp_server'
+    ]
+  },
+};
+```
 
-4. **Configure MCP Settings**:
-   Add the server configuration to your MCP settings file:
-   - For VSCode Claude extension: `~/Library/Application Support/Code/User/globalStorage/saoudrizwan.claude-dev/settings/cline_mcp_settings.json`
-   - For Claude desktop app: `~/Library/Application Support/Claude/claude_desktop_config.json`
+### Local Development (Optional)
 
-   Add this to the `mcpServers` object:
-   ```json
-   {
-     "mcpServers": {
-       "google-workspace": {
-         "command": "node",
-         "args": ["/path/to/google-workspace-server/build/index.js"],
-         "env": {
-           "GOOGLE_CLIENT_ID": "your_client_id",
-           "GOOGLE_CLIENT_SECRET": "your_client_secret",
-           "GOOGLE_REFRESH_TOKEN": "your_refresh_token"
-         }
-       }
-     }
-   }
-   ```
+If you prefer to run the server locally:
 
-5. **Build and Run**:
-   ```bash
-   npm run build
-   ```
+1. Clone the repository:
+```bash
+git clone https://github.com/KaranThink41/Google_workspace_mcp_server.git
+cd Google_workspace_mcp_server
+```
+
+2. Install dependencies:
+```bash
+npm install
+```
+
+3. Build the project:
+```bash
+npm run build
+```
+
+4. Run the server:
+```bash
+node build/index.js
+```
 
 ## Usage Examples
 
@@ -206,13 +192,6 @@ A Model Context Protocol (MCP) server implementation for interacting with Google
 - List and retrieve messages with filtering capabilities
 - Natural language filtering support
 
-## Prerequisites
-
-- Node.js (LTS version)
-- Google Cloud Project with Google Chat API enabled
-- Google OAuth 2.0 credentials
-- Docker (optional, for container deployment)
-
 ## Setup Instructions
 
 ### 1. Google Cloud Project Setup
@@ -223,7 +202,8 @@ A Model Context Protocol (MCP) server implementation for interacting with Google
 4. Create OAuth 2.0 credentials:
    - Go to API & Services > Credentials
    - Click "Create Credentials" > OAuth client ID
-   - Select "Desktop app" as the application type
+   - Choose "Web application"
+   - Set "Authorized redirect URIs" to include: `http://localhost:3000/auth/callback`
    - Note down the Client ID and Client Secret
 
 ### 2. Get Refresh Token
@@ -242,23 +222,31 @@ node get-refresh-token.js
 
 4. Follow the browser authentication flow to get the refresh token
 
-### 3. Environment Setup
+### 3. Install via Smithery
 
-1. Copy the example environment file:
+Install the server using Smithery's CLI:
 ```bash
-cp .env.example .env
+npx spinai-mcp install @KaranThink41/google_chat_mcp_server --provider smithery --config '{"spaceId":"your_space_id","googleClientId":"your_google_client_id","googleClientSecret":"your_google_client_secret","googleRefreshToken":"your_google_refresh_token"}'
 ```
 
-2. Update the `.env` file with your credentials:
-```env
-GOOGLE_CLIENT_ID=your_client_id
-GOOGLE_CLIENT_SECRET=your_client_secret
-GOOGLE_REFRESH_TOKEN=your_refresh_token
-GOOGLE_REDIRECT_URI=http://localhost:8000/auth/callback
-SPACE_ID=your_space_id
+Alternatively, you can use the following configuration:
+```javascript
+export default {
+  KaranThink41_google_chat_mcp_server: {
+    command: 'npx',
+    args: [
+      '-y',
+      '@smithery/cli@latest',
+      'run',
+      '@KaranThink41/google_chat_mcp_server'
+    ]
+  },
+};
 ```
 
-### 4. Local Development
+### 4. Local Development (Optional)
+
+If you prefer to run the server locally:
 
 1. Clone the repository:
 ```bash
